@@ -1,0 +1,12 @@
+name: 'Generate Plantuml'
+description: 'Create UML diagrams and insert into markdown'
+author: 'grassedge'
+inputs:
+  path:
+    description: 'path to directory which generated svg is stored.'
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
+branding:
+  icon: 'link'
+  color: 'gray-dark'
