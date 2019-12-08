@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="161px" preserveAspectRatio="none" style="width:330px;height:161px;" version="1.1" viewBox="0 0 330 161" width="330px" zoomAndPan="magnify"><defs><filter height="300%" id="f14mj5c6otftk3" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><ellipse cx="70.4486" cy="25.2897" fill="#FEFECE" filter="url(#f14mj5c6otftk3)" rx="64.4486" ry="15.2897" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="92" x="24.4486" y="29.9382">First usecase</text><ellipse cx="244.7002" cy="25.34" fill="#FEFECE" filter="url(#f14mj5c6otftk3)" rx="74.7002" ry="17.34" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="118" x="185.7002" y="29.9885">Another usecase</text><ellipse cx="70.5061" cy="127.0236" fill="#FEFECE" filter="url(#f14mj5c6otftk3)" rx="23.5061" ry="14.5236" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="29" x="56.0061" y="131.6721">UC3</text><ellipse cx="170.3949" cy="126.9345" fill="#FEFECE" filter="url(#f14mj5c6otftk3)" rx="40.8949" ry="23.9345" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="28" x="156.3949" y="120.2779">Last</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="59" x="140.8949" y="136.5748">usecase</text><!--MD5=[d2b4ddeb98478d66b0325bd4f7461560]
+link First usecase to UC2--><!--MD5=[e318812c593d6bfc9517a661f2795e3c]
+link First usecase to UC3--><!--MD5=[c2c2d51be8a732dddcb94b0c58646b8f]
+link UC3 to UC4--><!--MD5=[e51e50689d0f041198c85663d763d574]
+@startuml
+(First usecase)
+(Another usecase) as (UC2)  
+usecase UC3
+usecase (Last\nusecase) as UC4
+@enduml
+
+PlantUML version 1.2019.12(Sun Nov 03 10:24:54 UTC 2019)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) 64-Bit Server VM
+Java Version: 1.7.0_25-b15
+Operating System: Linux
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg>
