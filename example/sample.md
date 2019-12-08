@@ -31,7 +31,7 @@ Class07 .. Class08
 Class09 -- Class10
 ```
 
-![](./md-sample-sequence.svg)
+![](./md-sample-class.svg)
 
 You can also use diagrams other than uml. See https://plantuml.com/ to confirm what kind of diagrams you can use.
 
