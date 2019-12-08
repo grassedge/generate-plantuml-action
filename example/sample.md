@@ -35,21 +35,27 @@ Class09 -- Class10
 
 You can also use diagrams other than uml. See https://plantuml.com/ to confirm what kind of diagrams you can use.
 
-```plantuml:md-sample-ditaa
-@startditaa
-+--------+   +-------+    +-------+
-|        +---+ ditaa +--> |       |
-|  Text  |   +-------+    |diagram|
-|Document|   |!magic!|    |       |
-|     {d}|   |       |    |       |
-+---+----+   +-------+    +-------+
-	:                         ^
-	|       Lots of work      |
-	+-------------------------+
-@endditaa
+```plantuml:md-sample-mindmap
+@startmindmap
+* Debian
+** Ubuntu
+*** Linux Mint
+*** Kubuntu
+*** Lubuntu
+*** KDE Neon
+** LMDE
+** SolydXK
+** SteamOS
+** Raspbian with a very long name
+*** <s>Raspmbc</s> => OSMC
+*** <s>Raspyfi</s> => Volumio
+@endmindmap
 ```
 
-![](./md-sample-ditaa.svg)
+![](./md-sample-mindmap.svg)
+
+Note that this action generates svg data. you can specify only svg supported diagrams. For instance, `ditaa` is not supported.
+
 
 You can include diagram type in a fence information with format `plantuml@{type}:{filename}`.
 In this case, this action complements `@startgantt` and `@endgantt`.
