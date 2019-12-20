@@ -44,18 +44,13 @@ B -> C: test3
 
 test('updatedFiles', async() => {
     const files = await updatedFiles(octokitMock, pushEventPayloadMock);
-    await expect(files).toEqual([ 'action.yml', '' ]);
+    await expect(files).toEqual([ 'file1.txt', 'file2.txt' ]);
 });
 
 const octokitMock = {
-    git: {
-        getCommit: async function(opts) {
-            switch(opts.commit_sha) {
-                case '8bcd2e375cabcfe6fabd35f8685d13c48c2d09d0':
-                    return { data: commitMock };
-                default:
-                    throw new Error('');
-            }
+    repos: {
+        async getCommit({ owner, repo, ref }) {
+            return { data: commitMocks[ref] }
         }
     }
 }
@@ -63,7 +58,10 @@ const octokitMock = {
 const pushEventPayloadMock = {
     "commits": [
         {
-            "id": "8bcd2e375cabcfe6fabd35f8685d13c48c2d09d0"
+            "id": "a"
+        },
+        {
+            "id": "b"
         }
     ],
     "repository": {
@@ -74,10 +72,24 @@ const pushEventPayloadMock = {
     }
 };
 
-const commitMock = {
-    "parents": [
-        {
-            "sha": "e1127d04c7fb5730692b09eea14f34d60598577b"
-        }
-    ]
+const commitMocks = {
+    a: {
+        "sha": "a",
+        "files": [
+            {
+                "filename": "file1.txt",
+            }
+        ]
+    },
+    b: {
+        "sha": "b",
+        "files": [
+            {
+                "filename": "file1.txt",
+            },
+            {
+                "filename": "file2.txt",
+            }
+        ]
+    }
 };

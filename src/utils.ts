@@ -1,6 +1,6 @@
 import fs from 'fs';
+import { uniq } from 'lodash';
 import path from 'path';
-import * as exec from '@actions/exec';
 const markdownit = require('markdown-it');
 
 export function retrieveCodes(files) {
@@ -56,46 +56,13 @@ function puFromMd(markdown) {
     }, []);
 }
 
-function execute(cmd, args): Promise<{ exitCode: any; stdout: string; stderr: string }> {
-    return new Promise(async (resolve, reject) => {
-        let stdout = '', stderr = '';
-        const exitCode = await exec.exec(
-            cmd, args, {
-                listeners: {
-                    stdout: (data) => {
-                        stdout += data.toString();
-                    },
-                    stderr: (data) => {
-                        stderr += data.toString();
-                    }
-                }
-            }
-        );
-        if (exitCode !== 0) {
-            reject({ exitCode, stdout, stderr });
-        } else {
-            resolve({ exitCode, stdout, stderr });
-        }
-    });
-}
-
 export async function updatedFiles(octokit, payload) {
     const commits = payload.commits;
     const owner   = payload.repository.owner.login;
     const repo    = payload.repository.name;
 
-    const startCommit = (await octokit.git.getCommit({
-        owner,
-        repo,
-        commit_sha: commits[0].id,
-    })).data;
-
-    const startSha = startCommit.parents[0].sha;
-    const endSha   = commits[commits.length - 1].id;
-
-    const executed = await execute(
-        'git', ['diff', '--name-only', `${startSha}...${endSha}`]
-    );
-    const { exitCode, stdout } = <any>executed;
-    return stdout.split("\n");
+    const res = await Promise.all(commits.map(commit => octokit.repos.getCommit({
+        owner, repo, ref: commit.id
+    }).then(res => res.data.files)));
+    return uniq(res.reduce((accum: any[], files: any) => accum.concat(files.map(f => f.filename)), []));
 }
