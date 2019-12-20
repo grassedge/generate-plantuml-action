@@ -24,7 +24,7 @@ jobs:
     - name: checkout
       uses: actions/checkout@v1
       with:
-        fetch-depth: 20
+        fetch-depth: 1
     - name: plantuml
       id: plantuml
       uses: grassedge/generate-plantuml-action@v1.0
@@ -41,8 +41,6 @@ jobs:
 *env*
 
 - `GITHUB_TOKEN` : *required* GitHub Token of your repository to commit svg files.
-
-Note: `fetch-depth` on checkout should be more than a certain number because this action detects updated files with following command `git diff --name-only`.
 
 ## Demo
 
