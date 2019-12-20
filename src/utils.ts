@@ -9,12 +9,12 @@ export function retrieveCodes(files) {
         if (p.ext === '.pu') {
             return accum.concat({
                 name: p.name,
-                // TODO: file may have deleted.
+                // TODO: files may have been deleted.
                 code: fs.readFileSync(f).toString(),
             });
         }
         if (p.ext === '.md') {
-            // TODO: file may have deleted.
+            // TODO: files may have been deleted.
             const content = fs.readFileSync(f).toString();
             return accum.concat(puFromMd(content));
         }
