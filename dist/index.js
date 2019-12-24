@@ -4368,8 +4368,8 @@ const octokit = new github.GitHub(process.env.GITHUB_TOKEN);
             core.setFailed("Branch is not found.");
             return;
         }
-        const commits = utils_1.getCommitsFromPayload(octokit, payload);
-        const files = yield utils_1.updatedFiles(commits);
+        const commits = yield utils_1.getCommitsFromPayload(octokit, payload);
+        const files = utils_1.updatedFiles(commits);
         const plantumlCodes = utils_1.retrieveCodes(files);
         let tree = [];
         for (const plantumlCode of plantumlCodes) {

@@ -49,8 +49,8 @@ const octokit = new github.GitHub(process.env.GITHUB_TOKEN);
         return;
     }
 
-    const commits = getCommitsFromPayload(octokit, payload);
-    const files = await updatedFiles(commits);
+    const commits = await getCommitsFromPayload(octokit, payload);
+    const files = updatedFiles(commits);
     const plantumlCodes = retrieveCodes(files);
 
     let tree: any[] = [];
