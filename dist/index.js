@@ -4354,7 +4354,6 @@ if (!process.env.GITHUB_TOKEN) {
     process.exit(1);
 }
 const octokit = new github.GitHub(process.env.GITHUB_TOKEN);
-// TODO: handle force push
 (function main() {
     return __awaiter(this, void 0, void 0, function* () {
         const payload = github.context.payload;
@@ -4364,36 +4363,58 @@ const octokit = new github.GitHub(process.env.GITHUB_TOKEN);
         }
         const owner = payload.repository.owner.login;
         const repo = payload.repository.name;
-        const commits = payload.commits;
         const branch = branchFromRef(ref);
         if (!branch) {
             core.setFailed("Branch is not found.");
             return;
         }
-        const files = yield utils_1.updatedFiles(octokit, payload);
+        const commits = utils_1.getCommitsFromPayload(octokit, payload);
+        const files = yield utils_1.updatedFiles(commits);
         const plantumlCodes = utils_1.retrieveCodes(files);
+        let tree = [];
         for (const plantumlCode of plantumlCodes) {
-            const svg = yield generateSvg(plantumlCode.code);
             const p = path.format({
-                dir: diagramPath, name: plantumlCode.name, ext: '.svg'
+                dir: diagramPath,
+                name: plantumlCode.name,
+                ext: '.svg'
+            });
+            const svg = yield generateSvg(plantumlCode.code);
+            const blobRes = yield octokit.git.createBlob({
+                owner, repo,
+                content: js_base64_1.Base64.encode(svg),
+                encoding: 'base64',
             });
             const sha = yield octokit.repos.getContents({
-                owner,
-                repo,
-                ref,
-                path: p,
+                owner, repo, ref, path: p
             }).then(res => res.data.sha).catch(e => undefined);
-            yield octokit.repos.createOrUpdateFile({
-                owner,
-                repo,
-                sha,
-                branch,
-                path: p,
-                message: `Generate ${p}`,
-                content: js_base64_1.Base64.encode(svg),
-            });
-            console.log(`${p} is generated.`);
+            if (blobRes.data.sha !== sha) {
+                tree = tree.concat({
+                    path: p.toString(),
+                    mode: "100644",
+                    type: "blob",
+                    sha: blobRes.data.sha
+                });
+            }
         }
+        if (tree.length === 0) {
+            console.log(`No file is generated.`);
+            return;
+        }
+        const treeRes = yield octokit.git.createTree({
+            owner, repo, tree,
+            base_tree: commits[0].tree.sha,
+        });
+        const createdCommitRes = yield octokit.git.createCommit({
+            owner, repo,
+            message: `Generate svg files`,
+            parents: [commits[0].sha],
+            tree: treeRes.data.sha,
+        });
+        const updatedRefRes = yield octokit.git.updateRef({
+            owner, repo, ref,
+            sha: createdCommitRes.data.sha,
+        });
+        console.log(`${tree.map(t => t.path).join("\n")} Abobe files are generated.`);
     });
 })().catch(e => {
     core.setFailed(e);
@@ -32545,12 +32566,12 @@ function retrieveCodes(files) {
         if (p.ext === '.pu') {
             return accum.concat({
                 name: p.name,
-                // TODO: file may have deleted.
+                // TODO: files may have been deleted.
                 code: fs_1.default.readFileSync(f).toString(),
             });
         }
         if (p.ext === '.md') {
-            // TODO: file may have deleted.
+            // TODO: files may have been deleted.
             const content = fs_1.default.readFileSync(f).toString();
             return accum.concat(puFromMd(content));
         }
@@ -32588,16 +32609,20 @@ function puFromMd(markdown) {
         });
     }, []);
 }
-function updatedFiles(octokit, payload) {
+function getCommitsFromPayload(octokit, payload) {
     return __awaiter(this, void 0, void 0, function* () {
         const commits = payload.commits;
         const owner = payload.repository.owner.login;
         const repo = payload.repository.name;
         const res = yield Promise.all(commits.map(commit => octokit.repos.getCommit({
             owner, repo, ref: commit.id
-        }).then(res => res.data.files)));
-        return lodash_1.uniq(res.reduce((accum, files) => accum.concat(files.map(f => f.filename)), []));
+        })));
+        return res.map(res => res.data);
     });
+}
+exports.getCommitsFromPayload = getCommitsFromPayload;
+function updatedFiles(commits) {
+    return lodash_1.uniq(commits.reduce((accum, commit) => accum.concat(commit.files.map(f => f.filename)), []));
 }
 exports.updatedFiles = updatedFiles;
 
