@@ -34,7 +34,6 @@ if (!process.env.GITHUB_TOKEN) {
 const octokit = new github.GitHub(process.env.GITHUB_TOKEN);
 
 (async function main() {
-
     const payload = github.context.payload;
     const ref     = payload.ref;
     if (!payload.repository) {
@@ -89,22 +88,23 @@ const octokit = new github.GitHub(process.env.GITHUB_TOKEN);
 
     const treeRes = await octokit.git.createTree({
         owner, repo, tree,
-        base_tree: commits[0].tree.sha,
+        base_tree: commits[commits.length - 1].commit.tree.sha,
     });
 
     const createdCommitRes = await octokit.git.createCommit({
         owner, repo,
         message: `Generate svg files`,
-        parents: [ commits[0].sha ],
+        parents: [ commits[commits.length - 1].sha ],
         tree: treeRes.data.sha,
     });
 
     const updatedRefRes = await octokit.git.updateRef({
-        owner, repo, ref,
+        owner, repo,
+        ref: ref.replace(/^refs\//, ''),
         sha: createdCommitRes.data.sha,
     });
 
-    console.log(`${tree.map(t => t.path).join("\n")} Abobe files are generated.`);
+    console.log(`${tree.map(t => t.path).join("\n")}\nAbobe files are generated.`);
 })().catch(e => {
     core.setFailed(e);
 });
