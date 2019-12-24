@@ -1,4 +1,4 @@
-import { retrieveCodes, updatedFiles } from '../src/utils'
+import { retrieveCodes, getCommitsFromPayload, updatedFiles } from '../src/utils'
 import * as process from 'process'
 import * as cp from 'child_process'
 import * as path from 'path'
@@ -42,8 +42,53 @@ B -> C: test3
     ]);
 });
 
+test('getCommitsFromPayload', async() => {
+    const files = await getCommitsFromPayload(octokitMock, pushEventPayloadMock);
+    await expect(files).toEqual([
+        {
+            "files": [
+                {
+                    "filename": "file1.txt",
+                },
+            ],
+            "sha": "a",
+        },
+        {
+            "files": [
+                {
+                    "filename": "file1.txt",
+                },
+                {
+                    "filename": "file2.txt",
+                },
+            ],
+            "sha": "b",
+        }
+    ]);
+});
+
 test('updatedFiles', async() => {
-    const files = await updatedFiles(octokitMock, pushEventPayloadMock);
+    const files = await updatedFiles([
+        {
+            "files": [
+                {
+                    "filename": "file1.txt",
+                },
+            ],
+            "sha": "a",
+        },
+        {
+            "files": [
+                {
+                    "filename": "file1.txt",
+                },
+                {
+                    "filename": "file2.txt",
+                },
+            ],
+            "sha": "b",
+        }
+    ]);
     await expect(files).toEqual([ 'file1.txt', 'file2.txt' ]);
 });
 

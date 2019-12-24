@@ -56,13 +56,20 @@ function puFromMd(markdown) {
     }, []);
 }
 
-export async function updatedFiles(octokit, payload) {
+export async function getCommitsFromPayload(octokit, payload) {
     const commits = payload.commits;
     const owner   = payload.repository.owner.login;
     const repo    = payload.repository.name;
 
     const res = await Promise.all(commits.map(commit => octokit.repos.getCommit({
         owner, repo, ref: commit.id
-    }).then(res => res.data.files)));
-    return uniq(res.reduce((accum: any[], files: any) => accum.concat(files.map(f => f.filename)), []));
+    })));
+    return res.map(res => (<any>res).data);
+}
+
+export function updatedFiles(commits) {
+    return uniq(commits.reduce(
+        (accum: any[], commit) => accum.concat(commit.files.map(f => f.filename)),
+        []
+    ));
 }

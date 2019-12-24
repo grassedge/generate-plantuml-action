@@ -6,7 +6,7 @@ import { Base64 } from 'js-base64';
 const path = require('path');
 const plantumlEncoder = require('plantuml-encoder');
 
-import { retrieveCodes, updatedFiles } from './utils';
+import { retrieveCodes, getCommitsFromPayload, updatedFiles } from './utils';
 
 function branchFromRef(ref) {
     const matched = ref.match(/^refs\/heads\/(.+)$/);
@@ -33,7 +33,6 @@ if (!process.env.GITHUB_TOKEN) {
 }
 const octokit = new github.GitHub(process.env.GITHUB_TOKEN);
 
-// TODO: handle force push
 (async function main() {
 
     const payload = github.context.payload;
@@ -43,7 +42,6 @@ const octokit = new github.GitHub(process.env.GITHUB_TOKEN);
     }
     const owner   = payload.repository.owner.login;
     const repo    = payload.repository.name;
-    const commits = payload.commits;
 
     const branch = branchFromRef(ref);
     if (!branch) {
@@ -51,36 +49,62 @@ const octokit = new github.GitHub(process.env.GITHUB_TOKEN);
         return;
     }
 
-    const files = await updatedFiles(octokit, payload);
+    const commits = getCommitsFromPayload(octokit, payload);
+    const files = await updatedFiles(commits);
     const plantumlCodes = retrieveCodes(files);
 
+    let tree: any[] = [];
     for (const plantumlCode of plantumlCodes) {
+        const p = path.format({
+            dir: diagramPath,
+            name: plantumlCode.name,
+            ext: '.svg'
+        });
 
         const svg = await generateSvg(plantumlCode.code);
-
-        const p = path.format({
-            dir: diagramPath, name: plantumlCode.name, ext: '.svg'
+        const blobRes = await octokit.git.createBlob({
+            owner, repo,
+            content: Base64.encode(svg),
+            encoding: 'base64',
         });
 
         const sha = await octokit.repos.getContents({
-            owner,
-            repo,
-            ref,
-            path: p,
+            owner, repo, ref, path: p
         }).then(res => (<any>res.data).sha).catch(e => undefined);
 
-        await octokit.repos.createOrUpdateFile({
-            owner,
-            repo,
-            sha,
-            branch,
-            path: p,
-            message: `Generate ${p}`,
-            content: Base64.encode(svg),
-        });
-
-        console.log(`${p} is generated.`);
+        if (blobRes.data.sha !== sha) {
+            tree = tree.concat({
+                path: p.toString(),
+                mode: "100644",
+                type: "blob",
+                sha: blobRes.data.sha
+            })
+        }
     }
+
+    if (tree.length === 0) {
+        console.log(`No file is generated.`);
+        return;
+    }
+
+    const treeRes = await octokit.git.createTree({
+        owner, repo, tree,
+        base_tree: commits[0].tree.sha,
+    });
+
+    const createdCommitRes = await octokit.git.createCommit({
+        owner, repo,
+        message: `Generate svg files`,
+        parents: [ commits[0].sha ],
+        tree: treeRes.data.sha,
+    });
+
+    const updatedRefRes = await octokit.git.updateRef({
+        owner, repo, ref,
+        sha: createdCommitRes.data.sha,
+    });
+
+    console.log(`${tree.map(t => t.path).join("\n")} Abobe files are generated.`);
 })().catch(e => {
     core.setFailed(e);
 });
