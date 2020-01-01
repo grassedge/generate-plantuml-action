@@ -1,5 +1,5 @@
 name: 'Generate Plantuml'
-description: 'Create UML diagrams and insert into markdown'
+description: 'Generate uml diagrams with Plantuml Server and push them to your repository.'
 author: 'grassedge'
 inputs:
   path:
