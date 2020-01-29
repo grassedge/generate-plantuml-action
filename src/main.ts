@@ -82,7 +82,7 @@ const octokit = new github.GitHub(process.env.GITHUB_TOKEN);
     }
 
     if (tree.length === 0) {
-        console.log(`No file is generated.`);
+        console.log(`There are no files to be generated.`);
         return;
     }
 
