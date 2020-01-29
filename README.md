@@ -48,4 +48,4 @@ see [examples](./example/sample.md) here.
 
 ## License
 
-The Dockerfile and associated scripts and documentation in this project are released under the [MIT License](LICENSE).
+The scripts and documentation in this project are released under the [MIT License](LICENSE).
