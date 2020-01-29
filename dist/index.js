@@ -4329,13 +4329,6 @@ const js_base64_1 = __webpack_require__(734);
 const path = __webpack_require__(622);
 const plantumlEncoder = __webpack_require__(524);
 const utils_1 = __webpack_require__(611);
-function branchFromRef(ref) {
-    const matched = ref.match(/^refs\/heads\/(.+)$/);
-    if (!matched) {
-        return null;
-    }
-    return matched[1];
-}
 function generateSvg(code) {
     return __awaiter(this, void 0, void 0, function* () {
         const encoded = plantumlEncoder.encode(code);
@@ -4363,11 +4356,6 @@ const octokit = new github.GitHub(process.env.GITHUB_TOKEN);
         }
         const owner = payload.repository.owner.login;
         const repo = payload.repository.name;
-        const branch = branchFromRef(ref);
-        if (!branch) {
-            core.setFailed("Branch is not found.");
-            return;
-        }
         const commits = yield utils_1.getCommitsFromPayload(octokit, payload);
         const files = utils_1.updatedFiles(commits);
         const plantumlCodes = utils_1.retrieveCodes(files);
@@ -4397,7 +4385,7 @@ const octokit = new github.GitHub(process.env.GITHUB_TOKEN);
             }
         }
         if (tree.length === 0) {
-            console.log(`No file is generated.`);
+            console.log(`There are no files to be generated.`);
             return;
         }
         const treeRes = yield octokit.git.createTree({
