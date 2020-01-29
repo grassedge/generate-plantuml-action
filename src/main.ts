@@ -8,14 +8,6 @@ const plantumlEncoder = require('plantuml-encoder');
 
 import { retrieveCodes, getCommitsFromPayload, updatedFiles } from './utils';
 
-function branchFromRef(ref) {
-    const matched = ref.match(/^refs\/heads\/(.+)$/);
-    if (!matched) {
-        return null;
-    }
-    return matched[1];
-}
-
 async function generateSvg(code) {
     const encoded = plantumlEncoder.encode(code);
     try {
@@ -41,12 +33,6 @@ const octokit = new github.GitHub(process.env.GITHUB_TOKEN);
     }
     const owner   = payload.repository.owner.login;
     const repo    = payload.repository.name;
-
-    const branch = branchFromRef(ref);
-    if (!branch) {
-        core.setFailed("Branch is not found.");
-        return;
-    }
 
     const commits = await getCommitsFromPayload(octokit, payload);
     const files = updatedFiles(commits);
