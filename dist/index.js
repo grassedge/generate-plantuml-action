@@ -32571,7 +32571,7 @@ exports.retrieveCodes = retrieveCodes;
 const infoRegexp = /^plantuml(?:@(.+))?:([\w-_.]+)/;
 function puFromMd(markdown) {
     const md = new markdownit();
-    const fences = md.parse(markdown)
+    const fences = md.parse(markdown, {})
         .filter(token => token.type === 'fence')
         .filter(token => infoRegexp.test(token.info));
     return fences.reduce((accum, fence) => {
