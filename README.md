@@ -44,7 +44,7 @@ jobs:
         fetch-depth: 1
     - name: plantuml
       id: plantuml
-      uses: grassedge/generate-plantuml-action@v1.1
+      uses: grassedge/generate-plantuml-action@v1.3
       with:
         path: example
       env:
