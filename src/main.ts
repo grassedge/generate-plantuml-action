@@ -19,6 +19,8 @@ async function generateSvg(code) {
 }
 
 const diagramPath = core.getInput('path');
+const commitMessage = core.getInput('message');
+
 if (!process.env.GITHUB_TOKEN) {
     core.setFailed('Please set GITHUB_TOKEN env var.');
     process.exit(1);
@@ -79,7 +81,7 @@ const octokit = new github.GitHub(process.env.GITHUB_TOKEN);
 
     const createdCommitRes = await octokit.git.createCommit({
         owner, repo,
-        message: `Generate svg files`,
+        message: commitMessage.length ? commitMessage : 'Render PlantUML files',
         parents: [ commits[commits.length - 1].sha ],
         tree: treeRes.data.sha,
     });
