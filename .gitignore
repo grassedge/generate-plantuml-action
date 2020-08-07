@@ -102,4 +102,7 @@ typings/
 # TernJS port file
 .tern-port
 
+# IDE files
+.idea
+
 /lib

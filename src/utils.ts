@@ -2,23 +2,46 @@ import fs from 'fs';
 import { uniq } from 'lodash';
 import path from 'path';
 const markdownit = require('markdown-it');
+const umlFileExtensions = [
+    '.pu',
+    '.pml',
+    '.puml',
+    '.plantuml',
+];
+const markdownExtensions = [
+    '.md',
+    '.markdown',
+    '.mdown',
+    '.mkdn',
+    '.mdwn',
+    '.mkd',
+    '.mdn',
+    '.md.txt',
+];
 
 export function retrieveCodes(files) {
     return files.reduce((accum, f) => {
         const p = path.parse(f);
-        if (p.ext === '.pu') {
+        if (umlFileExtensions.indexOf(p.ext) !== -1) {
             return accum.concat({
                 name: p.name,
                 // TODO: files may have been deleted.
                 code: fs.readFileSync(f).toString(),
+                dir: p.dir
             });
         }
-        if (p.ext === '.md') {
+        if (markdownExtensions.indexOf(p.ext) !== -1) {
             // TODO: files may have been deleted.
             const content = fs.readFileSync(f).toString();
-            return accum.concat(puFromMd(content));
+            const dir = path.dirname(f);
+            const codes = puFromMd(content);
+            codes.forEach(code => {
+                code.dir = path.dirname(f)
+                return code;
+            })
+            return accum.concat(codes);
         }
-        return p.ext === '.md' ? accum.concat(f) : accum
+        return accum;
     }, []);
 }
 
@@ -69,7 +92,9 @@ export async function getCommitsFromPayload(octokit, payload) {
 
 export function updatedFiles(commits) {
     return uniq(commits.reduce(
-        (accum: any[], commit) => accum.concat(commit.files.map(f => f.filename)),
+        (accum: any[], commit) => accum.concat(
+            commit.files.filter(f => f.status !== 'removed').map(f => f.filename)
+        ),
         []
     ));
 }

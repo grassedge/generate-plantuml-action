@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc",
     "package": "ncc build lib/main.js",
-    "test": "jest"
+    "test": "jest",
+    "test:ci": "jest --ci --coverage --reporters=default --reporters=jest-junit"
   },
   "repository": {
     "type": "git",
@@ -25,7 +26,7 @@
     "@actions/github": "^1.1.0",
     "axios": "^0.19.0",
     "js-base64": "^2.5.1",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "markdown-it": "^10.0.0",
     "plantuml-encoder": "^1.4.0"
   },
@@ -33,9 +34,15 @@
     "@types/jest": "^24.0.13",
     "@types/node": "^12.0.4",
     "@zeit/ncc": "^0.20.5",
-    "jest": "^24.9.0",
-    "jest-circus": "^24.7.1",
-    "ts-jest": "^24.0.2",
-    "typescript": "^3.5.1"
+    "jest": "^26.2.2",
+    "jest-circus": "^26.2.2",
+    "jest-junit": "^11.1.0",
+    "ts-jest": "^26.1.4",
+    "typescript": "^3.9.7"
+  },
+  "jest-junit": {
+    "suiteNameTemplate": "{filepath}",
+    "classNameTemplate": "{classname}",
+    "titleTemplate": "{title}"
   }
 }

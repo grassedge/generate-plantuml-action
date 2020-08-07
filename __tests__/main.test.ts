@@ -7,6 +7,9 @@ test('retrieveCodes', async() => {
     const codes = await retrieveCodes([
         '__tests__/assets/test1.md',
         '__tests__/assets/test3.pu',
+        '__tests__/assets/test5.pml',
+        '__tests__/assets/test6.puml',
+        '__tests__/assets/test7.plantuml',
     ]);
     await expect(codes).toEqual([
         {
@@ -14,14 +17,16 @@ test('retrieveCodes', async() => {
             code: `@startuml
 A -> B: test1
 @enduml
-`
+`,
+            dir: '__tests__/assets'
         },
         {
             name: 'test_2',
             code: `@startuml
 A -> B: test2
 @enduml
-`
+`,
+            dir: '__tests__/assets'
         },
         {
             name: 'test.4',
@@ -29,7 +34,8 @@ A -> B: test2
 [Prototype design] lasts 15 days
 [Test prototype] lasts 10 days
 @endgantt
-`
+`,
+            dir: '__tests__/assets'
         },
         {
             name: 'test3',
@@ -37,7 +43,35 @@ A -> B: test2
 A -> B: test3
 B -> C: test3
 @enduml
-`
+`,
+            dir: '__tests__/assets'
+        },
+        {
+            name: 'test5',
+            code: `@startuml
+A -> B: test5
+B -> C: test5
+@enduml
+`,
+            dir: '__tests__/assets'
+        },
+        {
+            name: 'test6',
+            code: `@startuml
+A -> B: test6
+B -> C: test6
+@enduml
+`,
+            dir: '__tests__/assets'
+        },
+        {
+            name: 'test7',
+            code: `@startuml
+A -> B: test7
+B -> C: test7
+@enduml
+`,
+            dir: '__tests__/assets'
         }
     ]);
 });
@@ -80,16 +114,26 @@ test('updatedFiles', async() => {
         {
             "files": [
                 {
+                    "status": "added",
                     "filename": "file1.txt",
                 },
                 {
+                    "status": "modified",
                     "filename": "file2.txt",
+                },
+                {
+                    "status": "removed",
+                    "filename": "file3.txt",
+                },
+                {
+                    "status": "renamed",
+                    "filename": "file4.txt",
                 },
             ],
             "sha": "b",
         }
     ]);
-    await expect(files).toEqual([ 'file1.txt', 'file2.txt' ]);
+    await expect(files).toEqual([ 'file1.txt', 'file2.txt', 'file4.txt' ]);
 });
 
 const octokitMock = {
