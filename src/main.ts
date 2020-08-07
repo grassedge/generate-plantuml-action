@@ -41,7 +41,7 @@ const octokit = new github.GitHub(process.env.GITHUB_TOKEN);
     let tree: any[] = [];
     for (const plantumlCode of plantumlCodes) {
         const p = path.format({
-            dir: diagramPath,
+            dir: (diagramPath === '.') ? plantumlCode.dir : diagramPath,
             name: plantumlCode.name,
             ext: '.svg'
         });
