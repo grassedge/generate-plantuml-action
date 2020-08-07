@@ -7,7 +7,18 @@ UML is very useful, but there are some difficulties to maintain.
 [PlantUML](https://plantuml.com/) enables you to write UML with text code, that is engineer-friendly so you would like it.
 
 
-This actions generate UML diagrams from plantuml code with [PlantUML Server](https://plantuml.com/en/server) when you commit `.pu` file or `.md` file that plantuml code is written on.
+This actions generate UML diagrams from plantuml code
+with [PlantUML Server](https://plantuml.com/en/server) when you commit plantUML files
+or Markdown files that plantuml code is written in.
+
+PlantUML files must end in either of
+- `.pu`
+- `.pml`
+- `.puml`
+- `.plantuml`
+
+Markdown files must end in
+- `.md`
 
 ## Usage
 
