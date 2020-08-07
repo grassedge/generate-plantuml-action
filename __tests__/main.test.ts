@@ -14,14 +14,16 @@ test('retrieveCodes', async() => {
             code: `@startuml
 A -> B: test1
 @enduml
-`
+`,
+            dir: '__tests__/assets'
         },
         {
             name: 'test_2',
             code: `@startuml
 A -> B: test2
 @enduml
-`
+`,
+            dir: '__tests__/assets'
         },
         {
             name: 'test.4',
@@ -29,7 +31,8 @@ A -> B: test2
 [Prototype design] lasts 15 days
 [Test prototype] lasts 10 days
 @endgantt
-`
+`,
+            dir: '__tests__/assets'
         },
         {
             name: 'test3',
@@ -37,7 +40,8 @@ A -> B: test2
 A -> B: test3
 B -> C: test3
 @enduml
-`
+`,
+            dir: '__tests__/assets'
         }
     ]);
 });
