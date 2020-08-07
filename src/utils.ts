@@ -2,11 +2,27 @@ import fs from 'fs';
 import { uniq } from 'lodash';
 import path from 'path';
 const markdownit = require('markdown-it');
+const umlFileExtensions = [
+    '.pu',
+    '.pml',
+    '.puml',
+    '.plantuml',
+];
+const markdownExtensions = [
+    '.md',
+    '.markdown',
+    '.mdown',
+    '.mkdn',,
+    '.mdwn',
+    '.mkd',
+    '.mdn',
+    '.md.txt',
+];
 
 export function retrieveCodes(files) {
     return files.reduce((accum, f) => {
         const p = path.parse(f);
-        if (p.ext === '.pu') {
+        if (umlFileExtensions.indexOf(p.ext) !== -1) {
             return accum.concat({
                 name: p.name,
                 // TODO: files may have been deleted.
@@ -14,7 +30,7 @@ export function retrieveCodes(files) {
                 dir: p.dir
             });
         }
-        if (p.ext === '.md') {
+        if (markdownExtensions.indexOf(p.ext) !== -1) {
             // TODO: files may have been deleted.
             const content = fs.readFileSync(f).toString();
             const dir = path.dirname(f);
@@ -25,7 +41,7 @@ export function retrieveCodes(files) {
             })
             return accum.concat(codes);
         }
-        return p.ext === '.md' ? accum.concat(f) : accum
+        return accum;
     }, []);
 }
 
