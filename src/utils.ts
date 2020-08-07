@@ -12,7 +12,7 @@ const markdownExtensions = [
     '.md',
     '.markdown',
     '.mdown',
-    '.mkdn',,
+    '.mkdn',
     '.mdwn',
     '.mkd',
     '.mdn',
