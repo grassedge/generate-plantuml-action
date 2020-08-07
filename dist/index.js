@@ -4304,6 +4304,25 @@ function checkMode (stat, options) {
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -4312,13 +4331,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
-};
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 // TODO logging.
@@ -4342,6 +4354,7 @@ function generateSvg(code) {
     });
 }
 const diagramPath = core.getInput('path');
+const commitMessage = core.getInput('message');
 if (!process.env.GITHUB_TOKEN) {
     core.setFailed('Please set GITHUB_TOKEN env var.');
     process.exit(1);
@@ -4394,7 +4407,7 @@ const octokit = new github.GitHub(process.env.GITHUB_TOKEN);
         });
         const createdCommitRes = yield octokit.git.createCommit({
             owner, repo,
-            message: `Generate svg files`,
+            message: commitMessage,
             parents: [commits[commits.length - 1].sha],
             tree: treeRes.data.sha,
         });
@@ -32594,6 +32607,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.updatedFiles = exports.getCommitsFromPayload = exports.retrieveCodes = void 0;
 const fs_1 = __importDefault(__webpack_require__(747));
 const lodash_1 = __webpack_require__(557);
 const path_1 = __importDefault(__webpack_require__(622));
@@ -32683,7 +32697,7 @@ function getCommitsFromPayload(octokit, payload) {
 }
 exports.getCommitsFromPayload = getCommitsFromPayload;
 function updatedFiles(commits) {
-    return lodash_1.uniq(commits.reduce((accum, commit) => accum.concat(commit.files.map(f => f.filename)), []));
+    return lodash_1.uniq(commits.reduce((accum, commit) => accum.concat(commit.files.filter(f => f.status !== 'removed').map(f => f.filename)), []));
 }
 exports.updatedFiles = updatedFiles;
 

@@ -81,7 +81,7 @@ const octokit = new github.GitHub(process.env.GITHUB_TOKEN);
 
     const createdCommitRes = await octokit.git.createCommit({
         owner, repo,
-        message: commitMessage.length ? commitMessage : 'Render PlantUML files',
+        message: commitMessage,
         parents: [ commits[commits.length - 1].sha ],
         tree: treeRes.data.sha,
     });
