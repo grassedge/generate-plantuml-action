@@ -1,3 +1,7 @@
+[![Maintainability](https://api.codeclimate.com/v1/badges/a21c7671c0a7ae182c28/maintainability)](https://codeclimate.com/github/theiconic/generate-plantuml-action/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/a21c7671c0a7ae182c28/test_coverage)](https://codeclimate.com/github/theiconic/generate-plantuml-action/test_coverage)
+[![Actions Status](https://github.com/theiconic/generate-plantuml-action/workflows/tests/badge.svg)](https://github.com/theiconic/generate-plantuml-action/actions)
+
 # generate-plantuml-action
 
 Generate uml diagrams with Plantuml Server and push them to your repository.
