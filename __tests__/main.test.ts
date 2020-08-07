@@ -114,16 +114,26 @@ test('updatedFiles', async() => {
         {
             "files": [
                 {
+                    "status": "added",
                     "filename": "file1.txt",
                 },
                 {
+                    "status": "modified",
                     "filename": "file2.txt",
+                },
+                {
+                    "status": "removed",
+                    "filename": "file3.txt",
+                },
+                {
+                    "status": "renamed",
+                    "filename": "file4.txt",
                 },
             ],
             "sha": "b",
         }
     ]);
-    await expect(files).toEqual([ 'file1.txt', 'file2.txt' ]);
+    await expect(files).toEqual([ 'file1.txt', 'file2.txt', 'file4.txt' ]);
 });
 
 const octokitMock = {

@@ -91,8 +91,8 @@ export async function getCommitsFromPayload(octokit, payload) {
 }
 
 export function updatedFiles(commits) {
-    return uniq(commits.reduce(
-        (accum: any[], commit) => accum.concat(commit.files.map(f => f.filename)),
+    return uniq(commits.reduce((accum: any[], commit) => accum.concat(
+        commit.files.filter(f => f.status !== 'removed').map(f => f.filename)),
         []
     ));
 }
