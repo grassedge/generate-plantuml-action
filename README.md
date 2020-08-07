@@ -54,7 +54,11 @@ jobs:
 
 *input*
 
-- `path` : *required* specify the path to save generated svg files.
+- `path` : *required* specify the path to save generated svg files -
+  specify `.` to save each SVG file in the same folder as the source
+  file it was generated from
+- `message` : specify the commit message for the commit of generated
+  svg files (defaults to `Render PlantUML files`)
 
 *env*
 
