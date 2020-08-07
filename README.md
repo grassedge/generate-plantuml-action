@@ -6,7 +6,6 @@ This action ease you to maintain UML.
 UML is very useful, but there are some difficulties to maintain.
 [PlantUML](https://plantuml.com/) enables you to write UML with text code, that is engineer-friendly so you would like it.
 
-
 This actions generate UML diagrams from plantuml code
 with [PlantUML Server](https://plantuml.com/en/server) when you commit plantUML files
 or Markdown files that plantuml code is written in.
@@ -19,6 +18,13 @@ PlantUML files must end in either of
 
 Markdown files must end in
 - `.md`
+- `.markdown`
+- `.mdown`
+- `.mkdn`
+- `.mdwn`
+- `.mkd`
+- `.mdn`
+- `.md.txt`
 
 ## Usage
 
