@@ -3,7 +3,11 @@ description: 'Generate uml diagrams with Plantuml Server and push them to your r
 author: 'grassedge'
 inputs:
   path:
-    description: 'path to directory which generated svg is stored.'
+    description: 'path to directory which generated svg is stored'
+    default: '.'
+  message:
+    description: 'the commit message when committing generated images'
+    default: 'Render PlantUML files'
 runs:
   using: 'node12'
   main: 'dist/index.js'
