@@ -63,6 +63,7 @@ jobs:
   file it was generated from
 - `message` : specify the commit message for the commit of generated
   svg files (defaults to `Render PlantUML files`)
+- `plant_uml_server_url` : specify custom plant uml server url (defaults to `http://www.plantuml.com/plantuml`)  
 
 *env*
 

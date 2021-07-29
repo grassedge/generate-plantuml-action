@@ -8,6 +8,9 @@ inputs:
   message:
     description: 'the commit message when committing generated images'
     default: 'Render PlantUML files'
+  plant_uml_server_url:
+    description: 'url for plant uml server'
+    default: 'http://www.plantuml.com/plantuml'
 runs:
   using: 'node12'
   main: 'dist/index.js'
