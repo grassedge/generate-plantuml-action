@@ -5,7 +5,7 @@ Set `plantuml:{filename}` as a fence information. `filename` is used as the file
 
 ```plantuml:md-sample-sequence
 @startuml
-actor Foo1
+actor Foo123
 boundary Foo2
 control Foo3
 entity Foo4
