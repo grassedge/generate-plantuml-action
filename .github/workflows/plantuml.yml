@@ -12,7 +12,7 @@ jobs:
         uses: actions/checkout@v2
       - name: plantuml
         id: plantuml
-        uses: grassedge/generate-plantuml-action@master
+        uses: philips-forks/generate-plantuml-action@master
         with:
           path: example
         env:
