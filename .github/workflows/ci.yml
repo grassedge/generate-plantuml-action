@@ -1,5 +1,7 @@
-name: tests
-on: push
+name: CI
+on:
+  push:
+    paths-ignore: ["**/index.js"]
 jobs:
   tests:
     runs-on: ubuntu-latest
@@ -13,7 +15,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12.x
-      - name: install depedencies
+      - name: install dependencies
         run: npm install
       - name: run tests
         run: "npm run test:ci"
@@ -31,3 +33,27 @@ jobs:
         with:
           codeclimate-test-reporter-id: ${{ secrets.CC_TEST_REPORTER_ID }}
           command: after-build
+  package:
+    runs-on: ubuntu-latest
+    name: package
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: install node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - name: install dependencies
+        run: npm install
+      - name: Transpile typescript
+        run: "npm run build"
+      - name: Package distribution
+        run: "npm run package"
+      - name: Commit the rendered files
+        uses: EndBug/add-and-commit@v9
+        with:
+          # This makes the GH Actions user/bot the author of the commit
+          default_author: github_actions
+          message: 'Add new distribution'
+          add: "dist/index.js"
+        if: "${{ github.ref == 'refs/heads/master'}}"
