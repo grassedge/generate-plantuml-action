@@ -22,7 +22,7 @@ const markdownExtensions = [
 export function retrieveCodes(files) {
     return files.reduce((accum, f) => {
         const p = path.parse(f);
-        if (!fs.existsSync(path)) {
+        if (!fs.existsSync(f)) {
             return accum;
         }
 
