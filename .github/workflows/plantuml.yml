@@ -1,8 +1,9 @@
 name: generate plantuml
 on:
-  push:
+  pull_request:
     paths:
       - "dist/index.js"
+  push:
     branches:
       - master
 jobs:
