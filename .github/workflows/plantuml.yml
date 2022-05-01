@@ -31,10 +31,10 @@ jobs:
          docker run -d --name plantuml -p 8080:8080 plantuml/plantuml-server:jetty
 
          echo TEST: Wait until plantuml server container is started
-         timeout 30 bash -c 'while [[ "$(curl -X GET -s -o /dev/null -w ''%{http_code}'' curl localhost:8080/svg/pStDuNBAJrBGjLDmpCbCJbMmKiX8JIp9ICv8JSxcSaZDIm6g0000)" != "200" ]]; do sleep 2; done' || false
+         timeout 30 bash -c 'while [[ "$(curl -X GET -s -o /dev/null -w ''%{http_code}'' localhost:8080/svg/pStDuNBAJrBGjLDmpCbCJbMmKiX8JIp9ICv8JSxcSaZDIm6g0000)" != "200" ]]; do sleep 2; done' || false
       - name: plantuml
         id: plantuml
-        uses: ./
+        uses: philips-forks/generate-plantuml-action@master
         with:
           path: example
           plantuml-server-url: ${{ matrix.server-url }}
