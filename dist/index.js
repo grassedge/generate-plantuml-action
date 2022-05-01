@@ -4403,7 +4403,7 @@ function generateSvg(code) {
     return __awaiter(this, void 0, void 0, function* () {
         const encoded = plantumlEncoder.encode(code);
         try {
-            const res = yield axios.get(`http://www.plantuml.com/plantuml/svg/${encoded}`);
+            const res = yield axios.get(`${serverUrl}/svg/${encoded}`);
             return res.data;
         }
         catch (e) {
@@ -4411,6 +4411,7 @@ function generateSvg(code) {
         }
     });
 }
+const serverUrl = core.getInput('plantuml-server-url');
 const diagramPath = core.getInput('path');
 const commitMessage = core.getInput('message');
 if (!process.env.GITHUB_TOKEN) {
