@@ -49,11 +49,10 @@ jobs:
         run: "npm run build"
       - name: Package distribution
         run: "npm run package"
-      - name: Commit the rendered files
+      - name: Commit the new distribution
         uses: EndBug/add-and-commit@v9
         with:
           # This makes the GH Actions user/bot the author of the commit
           default_author: github_actions
           message: 'Add new distribution'
           add: "dist/index.js"
-        if: "${{ github.ref == 'refs/heads/master'}}"

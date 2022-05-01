@@ -1,5 +1,10 @@
 name: generate plantuml
 on:
+  pull_request:
+    paths:
+      - "dist/index.js"
+      - "action.yml"
+      - "./github/workflows/plantuml.yml"
   push:
     branches:
       - master
@@ -7,13 +12,36 @@ jobs:
   generate_plantuml:
     runs-on: ubuntu-latest
     name: plantuml
+    strategy:
+      matrix:
+        server: ['default', 'local']
+        include:
+          - server: "default"
+            server-url: "http://www.plantuml.com/plantuml"
+            run-container: false
+          - server: "local"
+            server-url: "http://localhost:8080"
+            run-container: true
     steps:
       - name: checkout
         uses: actions/checkout@v2
+      - name: run plantuml server container
+        if: ${{ matrix.run-container }}
+        run: |
+         docker run -d --name plantuml -p 8080:8080 plantuml/plantuml-server:jetty
+
+         echo TEST: Wait until plantuml server container is started
+         timeout 30 bash -c 'while [[ "$(curl -X GET -s -o /dev/null -w ''%{http_code}'' curl localhost:8080/svg/pStDuNBAJrBGjLDmpCbCJbMmKiX8JIp9ICv8JSxcSaZDIm6g0000)" != "200" ]]; do sleep 2; done' || false
       - name: plantuml
         id: plantuml
-        uses: philips-forks/generate-plantuml-action@master
+        uses: ./
         with:
           path: example
+          plantuml-server-url: ${{ matrix.server-url }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Clean-up plantuml server
+        if: always() && ${{ matrix.run-container }}
+        run: |
+            docker stop plantuml
+            docker rm plantuml

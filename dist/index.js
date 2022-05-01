@@ -4399,11 +4399,11 @@ const js_base64_1 = __webpack_require__(734);
 const path = __webpack_require__(622);
 const plantumlEncoder = __webpack_require__(524);
 const utils_1 = __webpack_require__(611);
-function generateSvg(code) {
+function generateSvg(code, server) {
     return __awaiter(this, void 0, void 0, function* () {
         const encoded = plantumlEncoder.encode(code);
         try {
-            const res = yield axios.get(`http://www.plantuml.com/plantuml/svg/${encoded}`);
+            const res = yield axios.get(`${server}/svg/${encoded}`);
             return res.data;
         }
         catch (e) {
@@ -4411,8 +4411,10 @@ function generateSvg(code) {
         }
     });
 }
+const serverUrl = core.getInput('plantuml-server-url');
 const diagramPath = core.getInput('path');
 const commitMessage = core.getInput('message');
+console.log(`Generating diagrams to path:${diagramPath} using server:${serverUrl}`);
 if (!process.env.GITHUB_TOKEN) {
     core.setFailed('Please set GITHUB_TOKEN env var.');
     process.exit(1);
@@ -4437,7 +4439,7 @@ const octokit = new github.GitHub(process.env.GITHUB_TOKEN);
                 name: plantumlCode.name,
                 ext: '.svg'
             });
-            const svg = yield generateSvg(plantumlCode.code);
+            const svg = yield generateSvg(plantumlCode.code, serverUrl);
             const blobRes = yield octokit.git.createBlob({
                 owner, repo,
                 content: js_base64_1.Base64.encode(svg),
