@@ -3,6 +3,7 @@ on:
   pull_request:
     paths:
       - "dist/index.js"
+      - "action.yml"
   push:
     branches:
       - master
@@ -32,7 +33,7 @@ jobs:
          timeout 30 bash -c 'while [[ "$(curl -X GET -s -o /dev/null -w ''%{http_code}'' curl localhost:8080/svg/pStDuNBAJrBGjLDmpCbCJbMmKiX8JIp9ICv8JSxcSaZDIm6g0000)" != "200" ]]; do sleep 2; done' || false
       - name: plantuml
         id: plantuml
-        uses: philips-forks/generate-plantuml-action@master
+        uses: ./action
         with:
           path: example
           plantuml-server-url: ${{ matrix.server-url }}
