@@ -33,7 +33,7 @@ jobs:
          timeout 30 bash -c 'while [[ "$(curl -X GET -s -o /dev/null -w ''%{http_code}'' curl localhost:8080/svg/pStDuNBAJrBGjLDmpCbCJbMmKiX8JIp9ICv8JSxcSaZDIm6g0000)" != "200" ]]; do sleep 2; done' || false
       - name: plantuml
         id: plantuml
-        uses: ./action
+        uses: ./
         with:
           path: example
           plantuml-server-url: ${{ matrix.server-url }}
