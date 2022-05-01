@@ -1,6 +1,8 @@
 name: generate plantuml
 on:
   push:
+    paths:
+      - "dist/index.js"
     branches:
       - master
 jobs:
@@ -35,7 +37,7 @@ jobs:
           plantuml-server-url: ${{ matrix.server-url }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Clean-up plantuml serv
+      - name: Clean-up plantuml server
         if: always() && ${{ matrix.run-container }}
         run: |
             docker stop plantuml
