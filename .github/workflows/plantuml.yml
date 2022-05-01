@@ -4,6 +4,7 @@ on:
     paths:
       - "dist/index.js"
       - "action.yml"
+      - "./github/workflows/plantuml.yml"
   push:
     branches:
       - master
