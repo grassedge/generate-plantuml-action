@@ -92,7 +92,7 @@ const octokit = new github.GitHub(process.env.GITHUB_TOKEN);
         sha: createdCommitRes.data.sha,
     });
 
-    console.log(`${tree.map(t => t.path).join("\n")}\nAbobe files are generated.`);
+    console.log(`${tree.map(t => t.path).join("\n")}\nAbove files are generated.`);
 })().catch(e => {
     core.setFailed(e);
 });
