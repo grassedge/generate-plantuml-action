@@ -3,40 +3,14 @@ import * as process from 'process'
 import * as cp from 'child_process'
 import * as path from 'path'
 
-test('retrieveCodes', async() => {
+test('retrieveCodes', async () => {
     const codes = await retrieveCodes([
-        '__tests__/assets/test1.md',
         '__tests__/assets/test3.pu',
         '__tests__/assets/test5.pml',
         '__tests__/assets/test6.puml',
         '__tests__/assets/test7.plantuml',
     ]);
     await expect(codes).toEqual([
-        {
-            name: 'test-1',
-            code: `@startuml
-A -> B: test1
-@enduml
-`,
-            dir: '__tests__/assets'
-        },
-        {
-            name: 'test_2',
-            code: `@startuml
-A -> B: test2
-@enduml
-`,
-            dir: '__tests__/assets'
-        },
-        {
-            name: 'test.4',
-            code: `@startgantt
-[Prototype design] lasts 15 days
-[Test prototype] lasts 10 days
-@endgantt
-`,
-            dir: '__tests__/assets'
-        },
         {
             name: 'test3',
             code: `@startuml
@@ -76,7 +50,7 @@ B -> C: test7
     ]);
 });
 
-test('getCommitsFromPayload', async() => {
+test('getCommitsFromPayload', async () => {
     const files = await getCommitsFromPayload(octokitMock, pushEventPayloadMock);
     await expect(files).toEqual([
         {
@@ -101,7 +75,7 @@ test('getCommitsFromPayload', async() => {
     ]);
 });
 
-test('updatedFiles', async() => {
+test('updatedFiles', async () => {
     const files = await updatedFiles([
         {
             "files": [
@@ -133,7 +107,7 @@ test('updatedFiles', async() => {
             "sha": "b",
         }
     ]);
-    await expect(files).toEqual([ 'file1.txt', 'file2.txt', 'file4.txt' ]);
+    await expect(files).toEqual(['file1.txt', 'file2.txt', 'file4.txt']);
 });
 
 const octokitMock = {
