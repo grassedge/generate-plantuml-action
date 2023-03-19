@@ -9,7 +9,7 @@ inputs:
     description: 'the commit message when committing generated images'
     default: 'Render PlantUML files'
 runs:
-  using: 'node12'
+  using: 'node16'
   main: 'dist/index.js'
 branding:
   icon: 'image'
