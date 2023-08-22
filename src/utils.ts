@@ -22,16 +22,18 @@ const markdownExtensions = [
 export function retrieveCodes(files) {
     return files.reduce((accum, f) => {
         const p = path.parse(f);
+        if (!fs.existsSync(f)) {
+            return accum;
+        }
+
         if (umlFileExtensions.indexOf(p.ext) !== -1) {
             return accum.concat({
                 name: p.name,
-                // TODO: files may have been deleted.
                 code: fs.readFileSync(f).toString(),
                 dir: p.dir
             });
         }
         if (markdownExtensions.indexOf(p.ext) !== -1) {
-            // TODO: files may have been deleted.
             const content = fs.readFileSync(f).toString();
             const dir = path.dirname(f);
             const codes = puFromMd(content);
@@ -93,6 +95,7 @@ export async function getCommitsFromPayload(octokit, payload) {
 export function updatedFiles(commits) {
     return uniq(commits.reduce(
         (accum: any[], commit) => accum.concat(
+            //This does not filter out files that got changed and removed in multiple commits
             commit.files.filter(f => f.status !== 'removed').map(f => f.filename)
         ),
         []
