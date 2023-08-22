@@ -8,10 +8,10 @@ const plantumlEncoder = require('plantuml-encoder');
 
 import { retrieveCodes, getCommitsFromPayload, updatedFiles } from './utils';
 
-async function generateSvg(code) {
+async function generateSvg(code, plantUmlServerUrl) {
     const encoded = plantumlEncoder.encode(code);
     try {
-        const res = await axios.get(`http://www.plantuml.com/plantuml/svg/${encoded}`);
+        const res = await axios.get(`${plantUmlServerUrl}/svg/${encoded}`);
         return res.data;
     } catch(e) {
         // TODO
@@ -20,6 +20,7 @@ async function generateSvg(code) {
 
 const diagramPath = core.getInput('path');
 const commitMessage = core.getInput('message');
+const plantUmlServerUrl = core.getInput('plant_uml_server_url');
 
 if (!process.env.GITHUB_TOKEN) {
     core.setFailed('Please set GITHUB_TOKEN env var.');
@@ -48,7 +49,7 @@ const octokit = new github.GitHub(process.env.GITHUB_TOKEN);
             ext: '.svg'
         });
 
-        const svg = await generateSvg(plantumlCode.code);
+        const svg = await generateSvg(plantumlCode.code, plantUmlServerUrl);
         const blobRes = await octokit.git.createBlob({
             owner, repo,
             content: Base64.encode(svg),
